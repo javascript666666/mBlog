@@ -81,8 +81,7 @@ app.get('/',function(req, res, next) {
     * 第一个参数: 表示模板的文件, 相对于views目录   views/index.html
     * 第二个参数: 传递给模板使用的数据
     * */
-    //res.render('index');
-    res.send('你好')
+    res.render('index');
 })
 
 /*
