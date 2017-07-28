@@ -38,6 +38,7 @@ router.post('/user/register',function(req, res, next) {
     var query = new AV.Query('User');
      query.equalTo('username',username);
      query.find().then(function (rs) {
+         console.log(rs);
          if( rs.length != 0){
              responseData.code = 3;
              responseData.message = '用户名已重名';
