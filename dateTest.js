@@ -5,12 +5,15 @@ const AV = require('leanengine')
 
 
 AV.init({
-  appId: 'qMXwMb82EgtCiAnslcjKmR31-gzGzoHsz',
-  appKey: 'KsCbss7I0Pv685NK37xBujWH',
-  masterKey: 'BVm1yVPVrfFuMGBcOmSnhPMs'
+  appId: 'vHLTtHOJSNkDCFaW6U3RE6Nl-gzGzoHsz',
+  appKey: 'awjoYtyYWrw7tlkLOLOK1ewY',
+  masterKey: 'g6YqvlLgXMX81JLAOhirH5dW'
 });
+//================
 
- 
-new AV.Object('Tags',{
-   tagName: 'Javascript'
- }).save();
+var user = new AV.User();
+
+	user.setUsername('admin');
+  user.setPassword('admin');
+  user.set('isAdmin', true);
+  user.save();

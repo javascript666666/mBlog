@@ -13,14 +13,14 @@
     <tr >
         <th style="text-align: center">ID</th>
         <th style="text-align: center">用户名</th>
-        <th style="text-align: center">密码</th>
+        <th style="text-align: center">创建时间</th>
         <th style="text-align: center">是否是管理员</th>
     </tr>
    {% for user in users %}
     <tr>
         <td>{{user._id.toString()}}</td>
         <td>{{user.username}}</td>
-        <td>{{user.password}}</td>
+        <td>{{user.createdAt}}</td>
         <td>
             {% if user.isAdmin %}是{% endif %}
         </td>
