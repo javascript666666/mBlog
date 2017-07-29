@@ -259,7 +259,7 @@ router.post('/category/edit',function(req, res) {
                     res.render('admin/success', {
                         userInfo: req.userInfo,
                         message: '修改成功',
-                        url: '/admin/cagegory'
+                        url: '/admin/category'
                     });
                     return;
                 },function(err){
