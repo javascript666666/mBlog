@@ -20,7 +20,7 @@
     <tr>
         <td>{{user._id.toString()}}</td>
         <td>{{user.username}}</td>
-        <td>{{user.createdAt}}</td>
+        <td>{{user.createdAt|date('Y年m月d日 H:i:s',-60*8)}}</td>
         <td>
             {% if user.isAdmin %}是{% endif %}
         </td>

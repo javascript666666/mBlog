@@ -13,10 +13,10 @@
         <label for="category">分类:</label>
         <select name="category" id="category" class="form-control">
             {% for category in categories %}
-                {% if category._id.toString() == content.category._id.toString() %}
-                <option value="{{category.id}}" selected>{{category.name}}</option>
+                {% if category._id == content.category %}
+                <option value="{{category._id}}" selected>{{category.name}}</option>
                 {% else %}
-                 <option value="{{category.id}}">{{category.name}}</option>
+                 <option value="{{category._id}}">{{category.name}}</option>
                 {% endif %}
             {% endfor %}
         </select>

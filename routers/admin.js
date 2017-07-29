@@ -320,9 +320,50 @@ router.get('/category/delete',function(req, res){
 * */
 //内容首页
 router.get('/content', function(req, res) {
-    res.render('admin/content_index',{
-        userInfo: req.userInfo
-    })
+
+    var page = Number(req.query.page || 1);
+    var limit = 10;
+    var pages = 0;
+
+    var Content = new AV.Query('Content');
+    Content.count().then(function(count){
+        pages = Math.ceil(count / limit);
+        page = Math.min(page, pages);
+        page = Math.max(page, 1);
+        var skip = (page-1)*limit;
+
+        Content.limit(limit);
+        Content.skip(skip);
+        Content.include(['user', 'category']);
+        Content.descending('createdAt');
+        Content.find().then(function(result){
+            var contents = result.map(function(item){
+                    //console.log(item);
+                    var user = item.get('user');
+                    var category = item.get('category');
+                    return {
+                        _id:item.getObjectId(),
+                        description: item.get('description'),
+                        content: item.get('content'),
+                        title: item.get('title'),
+                        addTime: item.get('createdAt'),
+                        views: item.get('views'),
+                        user: user.getUsername(),
+                        category: category.get('name')
+                    }
+            })
+            //console.log(contents);
+            res.render('admin/content_index',{
+                userInfo: req.userInfo,
+                contents: contents,
+
+                count: count,
+                pages: pages,
+                page: page,
+                limit: limit
+            })
+        })
+    });
 })
 
 
@@ -332,7 +373,6 @@ router.get('/content', function(req, res) {
 router.get('/content/add',function(req, res){
 
     var query = new AV.Query('Category');
-    query.descending('createdAt');
     query.find().then(function (result) {
         if(result.length){
             var categories = result.map(function(item) {
@@ -350,8 +390,148 @@ router.get('/content/add',function(req, res){
     },function(err){
         res.render('admin/error', {
             userInfo: req.userInfo,
-            message: '数据未找到'
+            message: '指定内容不存在'
         });
     })
+})
+
+/*
+* 内容保存
+* */
+
+router.post('/content/add',function(req, res){
+    //console.log(req.body);
+    if (req.body.category == ''){
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '内容分类不能为空'
+        });
+        return;
+    }
+    if((req.body.title == '') || (req.body.description =='') || (req.body.content == '')) {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '标题 简介 内容不能为空'
+        })
+        return;
+    }
+    var query = new AV.Query('Category');
+    query.get(req.body.category).then(function(category){
+        var Content = new AV.Object('Content');
+        Content.set('user', AV.User.current());
+        Content.set('title',req.body.title);
+        Content.set('category',category);
+        Content.set('description',req.body.description);
+        Content.set('content', req.body.content);
+
+        Content.save().then(function(content){
+            //console.log(content);
+            res.render('admin/success', {
+                userInfo: req.userInfo,
+                message: '内容保存成功',
+                url: '/admin/content'
+            });
+        },function(err){
+            console.log(err);
+            res.render('admin/error', {
+                userInfo: req.userInfo,
+                message: '内容保存失败'
+            })
+        })
+    },function(error){});
+});
+
+/*
+* 内容编辑修改
+* */
+
+router.get('/content/edit',function(req, res) {
+    var id = req.query.id ||  '';
+    var content = {};
+    var Content = new AV.Query('Content');
+    Content.include(['user','category']);
+    Content.get(id).then(function(contentData) {
+        //console.log(contentData);
+        content = {
+            title: contentData.get('title'),
+            description: contentData.get('description'),
+            content: contentData.get('content'),
+            category: contentData.get('category').getObjectId()
+        }
+        //console.log(content);
+        var Category = new AV.Query('Category');
+        return Category.find()
+    },function(err){
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '指定内容不存在'
+        })
+    }).then(function (result) {
+        if (result.length) {
+            var categories = result.map(function (item) {
+                return {
+                    _id: item.getObjectId(),
+                    name: item.get('name')
+                };
+            });
+        }
+        res.render('admin/content_edit', {
+            userinfo: req.userInfo,
+            content: content,
+            categories: categories
+        });
+    })
+
+})
+
+/*
+* 内容保存
+* */
+
+router.post('/content/edit', function(req, res){
+    if (req.body.category == ''){
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '内容分类不能为空'
+        });
+        return;
+    }
+    if((req.body.title == '') || (req.body.description =='') || (req.body.content == '')) {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '标题 简介 内容不能为空'
+        })
+        return;
+    }
+
+    var query = new AV.Query('Category');
+    query.get(req.body.category).then(function(category) {
+        var Content = new AV.Object.createWithoutData('Content', req.query.id);
+        Content.set('user', AV.User.current());
+        Content.set('title', req.body.title);
+        Content.set('category', category);
+        Content.set('description', req.body.description);
+        Content.set('content', req.body.content);
+        return Content.save();
+    },function(err) {
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '指定分类不存在'
+        });
+    }).then(function(content){
+            //console.log(content);
+            res.render('admin/success', {
+                userInfo: req.userInfo,
+                message: '内容保存成功',
+                url: '/admin/content'
+            });
+        },function(err){
+            //console.log(err);
+            res.render('admin/error', {
+                userInfo: req.userInfo,
+                message: '内容保存失败'
+            })
+        });
+
 })
 module.exports = router;

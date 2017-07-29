@@ -24,10 +24,10 @@
    {% for content in contents %}
     <tr>
         <td>{{content._id.toString()}}</td>
-        <td>{{content.category.name}}</td>
+        <td>{{content.category}}</td>
         <td>{{content.title}}</td>
         <td>{{content.description}}</td>
-        <td>{{content.user.username}}</td>
+        <td>{{content.user}}</td>
         <td>{{content.views}}</td>
         <td>{{content.addTime|date('Y年m月d日 H:i:s',-60*8)}}</td>
         <td>
