@@ -3,7 +3,7 @@
     <div class="listBox">
         <h1>{{content.title}}</h1>
         <p class="colDefault">
-            作者：<span class="colInfo">{{content.user.username}}</span> -
+            作者：<span class="colInfo">{{content.username}}</span> -
             时间：<span class="colInfo">{{content.addTime|date('Y年m月d日 H:i:s', -8*60)}}</span> -
             阅读：<span class="colInfo">{{content.views}}</span> -
             评论：<span class="colInfo">{{content.comments.length}}</span>
@@ -17,7 +17,7 @@
     <h3 class="textLeft"><strong>评论</strong> <span class="em">一共有 <em id="messageCount">0</em> 条评论</span></h3>
 
     {% if userInfo._id %}
-    <p class="textLeft">zmouse</p>
+    <p class="textLeft">{{userInfo.username}}</p>
     <p class="textLeft clear">
         <textarea id="messageContent"></textarea>
         <input type="hidden" id="contentId" value="{{content.id}}">

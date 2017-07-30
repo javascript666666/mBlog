@@ -68,17 +68,7 @@ app.use('/api', require('./routers/api'));
 app.use('/', require('./routers/main'));
 
 
-// 跨域支持
-app.all('/api/*', function(req, res, next){
-    var origin = req.headers.origin;
-if (config.whiteOrigins.indexOf(origin) !== -1) {
-    res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, DELETE');
-}
-next();
-});
+
 //=================================================
 // 设置默认超时时间
 app.use(timeout('15s'));

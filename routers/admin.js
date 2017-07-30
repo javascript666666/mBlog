@@ -532,6 +532,26 @@ router.post('/content/edit', function(req, res){
                 message: '内容保存失败'
             })
         });
+});
 
+/*
+* 删除内容
+* */
+
+router.get('/content/delete', function(req, res) {
+    var id = req.query.id || '';
+    var Content = new AV.Object.createWithoutData('Content', id);
+    Content.destroy().then(function (success){
+        res.render('admin/success', {
+            userInfo: req.userInfo,
+            message: '内容删除成功',
+            url: '/admin/content'
+        });
+    },function(err){
+        res.render('admin/error', {
+            userInfo: req.userInfo,
+            message: '内容删除失败'
+        })
+    })
 })
 module.exports = router;
