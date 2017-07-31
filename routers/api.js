@@ -106,6 +106,7 @@ router.get('/user/logout', function(req, res) {
 
 router.get('/comment', function(req, res) {
     var Comment = new AV.Query('Comment');
+    console.log(req.query.contentid);
     var targertContent = AV.Object.createWithoutData('Content',req.query.contentid);
     Comment.equalTo('contentId',targertContent);
     Comment.include('username');
