@@ -1,5 +1,5 @@
 //评论每页显示的数目
-var perpage = 5;
+var perpage = 20;
 var page = 1;
 var pages = 0;
 var comments = [];
@@ -13,21 +13,24 @@ $('#messageBtn').on('click', function() {
             content: $('#messageContent').val()
         },
         success: function(responseData){
+            console.log(responseData);
             $('#messageContent').val('');
-           // console.log(responseData.data.comments);
-            comments = responseData.data.comments.reverse();
+            console.log(responseData.comments);
+            comments = responseData.comments.reverse();
             renderComment();
         }
     })
 });
 
 //每次页面重载的时候获取一下该文章的所有评论
+console.log($('#contentId').val())
 $.ajax({
     url: '/api/comment',
     data: {
-        contentid: $('#contentId').val( )
+        contentid: $('#contentId').val()
     },
     success: function(responseData){
+        console.log(responseData.data)
         comments = responseData.data.reverse();
         renderComment();
     }

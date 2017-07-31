@@ -35,36 +35,24 @@ router.use(function(req, res, next) {
 * 首页
 * */
 
-var findcategory = "";
 
 router.get('/',function (req, res) {
     data.count = 0;
     data.page = Number(req.query.page || 1);
     data.limit = 10;
     data.pages = 0;
-   //console.log(data,2222);
+
     function countFn(){
-        console.log(data.category,9999999)
-        if (data.category) {
-            return (function(){
-                var Category = new AV.Query('Category');
-                return Category.get(data.category)
-            })().then(function (category) {
-                //console.log(category);
-                findcategory = category;
-                var Content = new AV.Query('Content');
-                if (data.category) {
-                    Content.equalTo('category', category);
-                    return Content.count();
-                }
-            })
-        }
         var Content = new AV.Query('Content');
-        console.log(222222);
+        if(data.category){
+            Content.equalTo('category', new AV.Object.createWithoutData('Category',data.category));
+            return Content.count();
+        }
         return Content.count();
     };
+
     countFn().then(function (count) {
-        console.log(count);
+        //console.log(count);
         data.count = count;
         data.pages = Math.ceil(data.count / data.limit);
         data.page = Math.min(data.page, data.pages);
@@ -74,25 +62,24 @@ router.get('/',function (req, res) {
         var Content = new AV.Query('Content');
         Content.limit(data.limit);
         Content.skip(skip);
-        Content.include(['user', 'category']);
         Content.descending('createdAt');
-        //console.log(findcategory);
+        Content.include(['user', 'category']);
         if (data.category) {
-            Content.equalTo('category', findcategory);
+            Content.equalTo('category', new AV.Object.createWithoutData('Category',data.category));
             return Content.find();
         }
         return Content.find();
     }).then(function (querycontents) {
         var contents = querycontents.map(function (item) {
-            //console.log(item);
+           // console.log(item.get('user'));
             var user = item.get('user');
             var category = item.get('category');
             return {
-                id: item.getObjectId(),
+                id: item.id,
                 description: item.get('description'),
                 content: item.get('content'),
                 title: item.get('title'),
-                addTime: item.get('createdAt'),
+                addTime: item.createdAt,
                 views: item.get('views'),
                 comments: item.get('comments'),
                 user: user.getUsername(),
@@ -111,26 +98,45 @@ router.get('/',function (req, res) {
 router.get('/view', function(req, res){
     var contentId = req.query.contentid || '';
     var Content = new AV.Query('Content');
+    Content.include('user');
     Content.get(contentId).then(function(result) {
-        //console.log(result,999);
         var content = {
+            id: result.id,
             title: result.get('title'),
             content: result.get('content'),
             addTime: result.get('createdAt'),
-            username: result.get('user').get('name'),
-            comments: result.get('comments'),
-            views: result.get('views')+1
+            username: result.get('user').getUsername(),
+            views: result.get('views') + 1
         };
         data.content = content;
-        data.category = result.get('category').getObjectId();
+        data.category = result.get('category').id;
         result.increment('views', 1);
-        result.save();
+        return result.save();
     }).then(function(success){
-        //console.log(data); 阅读数保存成功
+        var Comment = new AV.Query('Comment');
+        var targetContent = AV.Object.createWithoutData('Content', contentId);
+        Comment.equalTo('contentId', targetContent);
+        Comment.include('contentId')
+        return Comment.find();
+    }).then(function(Comments){
+        //console.log(Comments,6666666)
+        var comments = Comments.map(function(item){
+            return {
+                postTime: item.createdAt,
+                contentId: item.get('contentId').id,
+                content: item.get('content'),
+                likes: item.get('likes')
+            }
+        });
+        data.content.comments = comments;
+    }).then(function(success){
+        //console.log(data); 阅读数读取成功
         res.render('main/view',data);
-    },function(err){
-        //console.log(err)
-    })
+    }).catch(function(err) {
+        console.log(err);
+    });
 });
+
+
 
 module.exports = router;

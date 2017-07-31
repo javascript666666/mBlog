@@ -338,7 +338,7 @@ router.get('/content', function(req, res) {
         Content.descending('createdAt');
         Content.find().then(function(result){
             var contents = result.map(function(item){
-                    //console.log(item);
+                    console.log(item);
                     var user = item.get('user');
                     var category = item.get('category');
                     return {
@@ -352,7 +352,7 @@ router.get('/content', function(req, res) {
                         category: category.get('name')
                     }
             })
-            //console.log(contents);
+            console.log(contents);
             res.render('admin/content_index',{
                 userInfo: req.userInfo,
                 contents: contents,
@@ -503,7 +503,6 @@ router.post('/content/edit', function(req, res){
         })
         return;
     }
-
     var query = new AV.Query('Category');
     query.get(req.body.category).then(function(category) {
         var Content = new AV.Object.createWithoutData('Content', req.query.id);

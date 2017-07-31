@@ -5,9 +5,9 @@ const AV = require('leanengine')
 
 
 AV.init({
-  appId: 'vHLTtHOJSNkDCFaW6U3RE6Nl-gzGzoHsz',
-  appKey: 'awjoYtyYWrw7tlkLOLOK1ewY',
-  masterKey: 'g6YqvlLgXMX81JLAOhirH5dW'
+    appId: 'vHLTtHOJSNkDCFaW6U3RE6Nl-gzGzoHsz',
+    appKey: 'awjoYtyYWrw7tlkLOLOK1ewY',
+    masterKey: 'g6YqvlLgXMX81JLAOhirH5dW'
 });
 //================
 //添加有管理员权限的用户
@@ -21,45 +21,45 @@ AV.init({
 
 
 /*
-//添加数据类型事例
+ //添加数据类型事例
 
-//AV.Object 支持以下数据类型：
+ //AV.Object 支持以下数据类型：
  // 该语句应该只声明一次
-  var TestObject = AV.Object.extend('DataTypeTest');
+ var TestObject = AV.Object.extend('DataTypeTest');
 
-  var number = 2014;
-  var string = 'famous film name is ' + number;
-  var date = new Date();
-  var array = [string, number];
-  var object = { number: number, string: string };
+ var number = 2014;
+ var string = 'famous film name is ' + number;
+ var date = new Date();
+ var array = [string, number];
+ var object = { number: number, string: string };
 
-  var testObject = new TestObject();
-  testObject.set('testNumber', number);
-  testObject.set('testString', string);
-  testObject.set('testDate', date);
-  testObject.set('testArray', array);
-  testObject.set('testObject', object);
-  testObject.set('testNull', null);
-  testObject.save().then(function(testObject) {
-    // 成功
-  }, function(error) {
-    // 失败
-  });
-*/
+ var testObject = new TestObject();
+ testObject.set('testNumber', number);
+ testObject.set('testString', string);
+ testObject.set('testDate', date);
+ testObject.set('testArray', array);
+ testObject.set('testObject', object);
+ testObject.set('testNull', null);
+ testObject.save().then(function(testObject) {
+ // 成功
+ }, function(error) {
+ // 失败
+ });
+ */
 
 // AV.Object.extend('className') 所需的参数 className 则表示对应的表名
 // 声明一个类型
 //var Todo = AV.Object.extend('Todo');
 /*
-//从 v1.4.0 开始，SDK 支持使用 ES6 中的 extends 语法来声明一个继承自 AV.Object 的类，上述的 Todo 声明也可以写作：
-//   class Todo extends AV.Object {}
-// 需要向 SDK 注册这个 Class
-AV.Object.register(Todo);
-2
-每个 id 必须有一个 Class 类名称，这样云端才知道它的数据归属于哪张数据表。
+ //从 v1.4.0 开始，SDK 支持使用 ES6 中的 extends 语法来声明一个继承自 AV.Object 的类，上述的 Todo 声明也可以写作：
+ //   class Todo extends AV.Object {}
+ // 需要向 SDK 注册这个 Class
+ AV.Object.register(Todo);
+ 2
+ 每个 id 必须有一个 Class 类名称，这样云端才知道它的数据归属于哪张数据表。
 
 
-   Class 类名称（ClassName）必须以字母开头，只能包含字母、数字和下划线。
+ Class 类名称（ClassName）必须以字母开头，只能包含字母、数字和下划线。
  */
 //==================================================
 
@@ -82,21 +82,21 @@ AV.Object.register(Todo);
 
 //===========================================================
 /* 创建关联数据类型事例
-// 新建一个 AV.Object
-var GuangZhou = new AV.Object('City');// 广州
-GuangZhou.set('name', '广州');
-var GuangDong = new AV.Object('Province');// 广东
-GuangDong.set('name', '广东');
-GuangZhou.set('dependent', GuangDong);// 为广州设置 dependent 属性为广东
-GuangZhou.save().then(function (guangZhou) {
-    console.log(guangZhou.id);
-});
-// 广东无需被单独保存，因为在保存广州的时候已经上传到云端。
-*/
+ // 新建一个 AV.Object
+ var GuangZhou = new AV.Object('City');// 广州
+ GuangZhou.set('name', '广州');
+ var GuangDong = new AV.Object('Province');// 广东
+ GuangDong.set('name', '广东');
+ GuangZhou.set('dependent', GuangDong);// 为广州设置 dependent 属性为广东
+ GuangZhou.save().then(function (guangZhou) {
+ console.log(guangZhou.id);
+ });
+ // 广东无需被单独保存，因为在保存广州的时候已经上传到云端。
+ */
 
 /*
-* 向云存储 数据库中添加表 Content类
-* */
+ * 向云存储 数据库中添加表 Content类
+ * */
 // var Content = new AV.Object('Content');
 // var category = new AV.Object('Category');
 // category.set('name','科技新闻');
@@ -126,63 +126,102 @@ GuangZhou.save().then(function (guangZhou) {
 //======================================
 //一对多关系 Pointers 存储
 // 新建一个 AV.Object
-var GuangZhou = new AV.Object('City');// 广州
-GuangZhou.set('name', '广州');
-var GuangDong = new AV.Object('Province');// 广东
-GuangDong.set('name', '广东');
-GuangZhou.set('dependent', GuangDong);// 为广州设置 dependent 属性为广东
-GuangZhou.save().then(function (guangZhou) {
-    console.log(guangZhou.id);
-});
+//var GuangZhou = new AV.Object('City');// 广州
+//GuangZhou.set('name', '广州');
+//var GuangDong = new AV.Object('Province');// 广东
+//GuangDong.set('name', '广东');
+//GuangZhou.set('dependent', GuangDong);// 为广州设置 dependent 属性为广东
+//GuangZhou.save().then(function (guangZhou) {
+//console.log(guangZhou.id);
+//});
 // 广东无需被单独保存，因为在保存广州的时候已经上传到云端。
 
 //注意：保存关联对象的同时，被关联的对象也会随之被保存到云端。
 
 
-    //要关联一个已经存在于云端的对象，例如将「东莞市」添加至「广东省」，方法如下：
+//要关联一个已经存在于云端的对象，例如将「东莞市」添加至「广东省」，方法如下：
 
 
 // 假设 GuangDong 的 objectId 为 56545c5b00b09f857a603632
-var GuangDong = AV.Object.createWithoutData('Province', '56545c5b00b09f857a603632');
-var DongGuan = new AV.Object('City');
-DongGuan.set('name', '东莞');
-DongGuan.set('dependent', GuangDong);
-DongGuan.save();
+/*var GuangDong = AV.Object.createWithoutData('Province', '56545c5b00b09f857a603632');
+ var DongGuan = new AV.Object('City');
+ DongGuan.set('name', '东莞');
+ DongGuan.set('dependent', GuangDong);
+ DongGuan.save();*/
 
 
-Pointers 查询
-假如已知一个城市，想知道它的上一级的省份：
-+
+/*
+ Pointers 查询
+ 假如已知一个城市，想知道它的上一级的省份：
+ +
 
-// 假设东莞作为 City 对象存储的时候它的 objectId 是 568e743c00b09aa22162b11f，这个  objectId 可以在控制台查看
-var DongGuan = AV.Object.createWithoutData('City', '568e743c00b09aa22162b11f');
-DongGuan.fetch({ include: ['dependent'] }).then(function (city) {
-    var province = city.get('dependent');
-    console.log(province.get('name'));
-});
+ // 假设东莞作为 City 对象存储的时候它的 objectId 是 568e743c00b09aa22162b11f，这个  objectId 可以在控制台查看
+ var DongGuan = AV.Object.createWithoutData('City', '568e743c00b09aa22162b11f');
+ DongGuan.fetch({ include: ['dependent'] }).then(function (city) {
+ var province = city.get('dependent');
+ console.log(province.get('name'));
+ });
+ */
 
 //假如查询结果中包含了城市，并想通过一次查询同时把对应的省份也一并加载到本地：
 
-
-var query = new AV.Query('City');
-query.equalTo('name', '广州');
-query.include(['dependent']);
-query.find().then(function (result) {
-    if (result.length > 0) {
-        var GuangZhou = result[0];
-        var province = GuangZhou.get('dependent');
-    }
-});
+/*
+ var query = new AV.Query('City');
+ query.equalTo('name', '广州');
+ query.include(['dependent']);
+ query.find().then(function (result) {
+ if (result.length > 0) {
+ var GuangZhou = result[0];
+ var province = GuangZhou.get('dependent');
+ }
+ });*/
 
 //假如已知一个省份，要找出它的所有下辖城市：
 
 
 // 假设 GuangDong 的 objectId 为 56545c5b00b09f857a603632
-var GuangDong = AV.Object.createWithoutData('Province', '56545c5b00b09f857a603632');
-var query = new AV.Query('City');
-query.equalTo('dependent', GuangDong);
-query.find().then(function (cities) {
-    cities.forEach(function (city, i, a) {
-        console.log(city.id);
-    });
-});
+/*
+ var GuangDong = AV.Object.createWithoutData('Province', '56545c5b00b09f857a603632');
+ var query = new AV.Query('City');
+ query.equalTo('dependent', GuangDong);
+ query.find().then(function (cities) {
+ cities.forEach(function (city, i, a) {
+ console.log(city.id);
+ });
+ });*/
+//======================================================
+//评论数据测试
+
+//文档事例
+/*
+ var comment = new AV.Object('Comment');// 构建 Comment 对象
+ comment.set('likes', 1);// 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
+ comment.set('content', '这个太赞了！楼主，我也要这些游戏，咱们团购么？');
+ // 假设已知被分享的该 TodoFolder 的 objectId 是 5735aae7c4c9710060fbe8b0
+ var targetTodoFolder = AV.Object.createWithoutData('TodoFolder', '5735aae7c4c9710060fbe8b0');
+ comment.set('targetTodoFolder', targetTodoFolder);
+ comment.save();//保存到云端*/
+
+var comment = new AV.Object('Comment');
+comment.set('likes', 1);
+comment.set('content','这是一篇好文章');
+var targertContent = AV.Object.createWithoutData('Content','597b5f4f128fe10056103c34');
+var targetUser = AV.Object.createWithoutData('User','597ab069fe88c20057afb184')
+comment.set('content',targertContent);
+comment.set('content',targetUser);
+comment.save();
+
+//=================================================
+var targetContent = AV.Object.createWithoutData('Content', req.body.contentid);
+var Comment = new AV.Query('Comment');
+Comment.equalTo('content', targetContent);
+query.find().then(function (results) {
+    var comments = results.map(function(item) {
+        return {
+            username: item.get('username'),
+            postTime: item.get('createdAt'),
+            contentId: item.get('contentId'),
+            content: item.get('content'),
+            likes: item.get('likes')
+        }
+    })

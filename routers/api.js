@@ -8,7 +8,8 @@ var responseData;
 router.use(function(req, res, next) {
     responseData = {
         code: 0,
-        message: ''
+        message: '',
+        comments: []
     }
     next();
 })
@@ -99,6 +100,83 @@ router.get('/user/logout', function(req, res) {
     res.json(responseData);
 });
 
+/*
+* 获取指定文章的所有评论
+* */
+
+router.get('/comment', function(req, res) {
+
+    var Comment = new AV.Query('Comment');
+    Comment.include('username');
+    Comment.ascending('createdAt');
+    Comment.find().then(function (results) {
+        var comments = results.map(function(item){
+            return {
+                username: item.get('username').getUsername(),
+                postTime: item.createdAt,
+                contentId: item.id,
+                content: item.get('content'),
+                likes: item.get('likes')
+            }
+        });
+        responseData.data = comments;
+        res.json(responseData);
+    },function(err) {
+        console.log(err);
+    })
+})
+
+/*
+* 评论提交
+* */
+
+router.post('/comment/post', function(req, res){
+    var contentId = req.body.contentid;
+    var commentContent = req.body.content || '';
+    if(commentContent.trim() == ''){
+        responseData.code = 1;
+        responseData.message = '请输入评论内容';
+        res.json(responseData);
+        return;
+    }
+    var comment = new AV.Object('Comment');
+    comment.set('content',req.body.content);
+    var targertContent = AV.Object.createWithoutData('Content',contentId);
+    comment.set('contentId',targertContent);
+    comment.set('username',AV.User.current());
+    comment.save().then(function(success) {
+        console.log(222222);
+        var targetContent = AV.Object.createWithoutData('Content', contentId);
+        targetContent.increment('views', 1);
+        var Comment = new AV.Query('Comment');
+        Comment.equalTo('contentId', targetContent);
+        Comment.include('username');
+        Comment.find().then(function (results){
+            console.log(results.length,'评论数');
+            var comments = results.map(function(item){
+                return {
+                    username: item.get('username').getUsername(),
+                    postTime: item.get('createdAt'),
+                    contentId: item.get('contentId').getObjectId(),
+                    content: item.get('content'),
+                    likes: item.get('likes')
+                }
+            });
+            console.log(333);
+            responseData.comments = comments;
+            responseData.message = '提交评论成功'
+            res.json(responseData);
+            var targetContent = AV.Object.createWithoutData('Content', req.body.contentid);
+
+            targetContent.set('comments', results.length);
+            return targetContent.save();
+        }).then(function(success){
+            console.log('该评论数已保存')
+        })
+    }).catch(function(err){
+        console.log(err);
+    })
+})
 
 
 module.exports = router;
